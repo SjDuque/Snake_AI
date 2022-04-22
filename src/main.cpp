@@ -10,7 +10,6 @@
 ********************************************************************************************/
 
 #include "raylib.h"
-#include "my_math.hpp"
 #include "Eigen/Dense"
 
 int main(void)
