@@ -11,8 +11,8 @@ set(CMAKE_CXX_STANDARD 11)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Set this to the minimal version you want to support
-find_package(raylib 3.0 QUIET) # Let CMake search for a raylib-config.cmake
-
+find_package(raylib 4.0 QUIET) # Let CMake search for a raylib-config.cmake
+find_package(Eigen3 3.0 REQUIRED NO_MODULE)
 # If you are using VCPKG:
 # find_package(raylib CONFIG REQUIRED)
 
@@ -56,7 +56,7 @@ file(GLOB main_sources
 add_executable(${PROJECT_NAME} ${main_sources})
 
 # If you are using a package manager such as brew or apt-get
-target_link_libraries(${PROJECT_NAME} raylib)
+target_link_libraries(${PROJECT_NAME} raylib Eigen3::Eigen)
 
 # If you are using VCPKG:
 # target_include_directories(${PROJECT_NAME} PRIVATE ${RAYLIB_INCLUDE_DIRS})

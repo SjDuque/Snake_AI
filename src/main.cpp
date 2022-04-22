@@ -11,6 +11,7 @@
 
 #include "raylib.h"
 #include "my_math.hpp"
+#include "Eigen/Dense"
 
 int main(void)
 {
@@ -18,7 +19,8 @@ int main(void)
     //--------------------------------------------------------------------------------------
     const int screenWidth = 800;
     const int screenHeight = 450;
-
+    
+    Eigen::MatrixXf a(50, 50);
     InitWindow(screenWidth, screenHeight, "raylib [textures] example - texture loading and drawing");
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
