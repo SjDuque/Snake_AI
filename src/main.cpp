@@ -28,7 +28,7 @@ int main(void)
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     Texture2D texture = LoadTexture("assets/raylib_logo.png");        // Texture loading
 
-    Snakecontroller game = Snakecontroller(25, 25);
+    Snakecontroller game = Snakecontroller(50, 30);
 
     //---------------------------------------------------------------------------------------
 
@@ -39,8 +39,13 @@ int main(void)
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
-        game.update();
+        if (game.getGameStatus() == ACTIVE) {
+            game.readInput();
+            game.update();
+        }
 
+        if (IsKeyPressed(KEY_R))
+            game = Snakecontroller(50, 30);
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -49,6 +54,10 @@ int main(void)
             ClearBackground(RAYWHITE);
 
             game.draw();
+
+            if (game.getGameStatus() == COLLIDED) {
+                DrawText("L", GetScreenWidth()/2 - MeasureText("L", 300)/2, GetScreenHeight()/2 - 50, 300, PINK);
+            }
 
         EndDrawing();
         //----------------------------------------------------------------------------------
