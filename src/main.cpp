@@ -12,6 +12,9 @@
 #include "raylib.h"
 #include "Eigen/Dense"
 
+#include "snake.hpp"
+#include "snakecontroller.hpp"
+
 int main(void)
 {
     // Initialization
@@ -24,6 +27,9 @@ int main(void)
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
     Texture2D texture = LoadTexture("assets/raylib_logo.png");        // Texture loading
+
+    Snakecontroller game = Snakecontroller(25, 25);
+
     //---------------------------------------------------------------------------------------
 
     // Main game loop
@@ -33,6 +39,8 @@ int main(void)
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
+        game.update();
+
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -40,12 +48,11 @@ int main(void)
 
             ClearBackground(RAYWHITE);
 
-            DrawTexture(texture, screenWidth/2 - texture.width/2, screenHeight/2 - texture.height/2, WHITE);
-
-            DrawText("this IS a texture!", 360, 370, 10, GRAY);
+            game.draw();
 
         EndDrawing();
         //----------------------------------------------------------------------------------
+        WaitTime(100);
     }
 
     // De-Initialization
