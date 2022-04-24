@@ -3,7 +3,6 @@
 
 #include <list>
 #include <vector>
-#include <cstdlib>
 
 const std::vector<int> DIR_MAP_X = {0, 0, -1, 1};
 const std::vector<int> DIR_MAP_Y = {-1, 1, 0, 0};
@@ -45,6 +44,7 @@ class Snake {
         std::vector<std::vector<grid_value>> grid;
         
         int score;
+        int moves;
         int startScore;
         int growthRate;
         
@@ -57,7 +57,7 @@ class Snake {
         Point shift(Point prev, direction dir);
         
     public:
-        Snake(int rows=30, int cols=30, int startScore = 3, int growthRate = 1);
+        Snake(int rows=30, int cols=30, int startScore=3, int growthRate=1);
         
         // game logic
         
@@ -81,11 +81,13 @@ class Snake {
         bool move();
         
         // get methods
-        Point getHead();
-        Point getTail();
-        grid_value getCell(int x, int y);
+        Point getHead() { return body.front(); }
+        Point getTail() { return body.back(); }
         direction getDirection() { return this->dir; }
         game_status getStatus() { return this->status; }
+        int getMoves() { return moves; }
+        bool isValid(int r, int c) { return r > -1 && r < rows() && c > -1 && c < cols(); }
+        grid_value getCell(int r, int c) { return isValid(r, c) ? OUT_OF_BOUNDS : grid[r][c]; }
         
         int rows() { return grid.size(); }
         int cols() { return grid[0].size(); }
