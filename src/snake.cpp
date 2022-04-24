@@ -2,8 +2,8 @@
 
 using namespace std;
 
-Snake::Snake(int width, int height, int startLength, int growthRate) : growthRate(growthRate), startLength(startLength) {
-    grid = vector<vector<grid_value>>(width, std::vector<grid_value>(height, EMPTY));
+Snake::Snake(int rows, int cols, int startScore, int growthRate) : growthRate(growthRate), startScore(startScore) {
+    grid = vector<vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
     body = list<Point>();
     apple = Point{0, 0};
     
@@ -21,7 +21,7 @@ void Snake::newGame() {
     clear();
     
     dir = UP;
-    length = startLength;
+    score = startScore;
     status = ALIVE;
     
     addFront(rows()/2, cols()/2);
@@ -51,14 +51,14 @@ bool Snake::move() {
     
     // increase length with apples
     if (nextCell == APPLE) {
-        length += growthRate;
+        score += growthRate;
     }
     
     // add head
     addFront(nextHead.x, nextHead.y);
     
     // remove tail if long enough
-    if (size() > length){
+    if (size() > score){
         deleteTail();
     }
     

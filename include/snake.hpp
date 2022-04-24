@@ -44,9 +44,9 @@ class Snake {
         std::list<Point> body;
         std::vector<std::vector<grid_value>> grid;
         
-        int startLength;
+        int score;
+        int startScore;
         int growthRate;
-        int length;
         
         direction dir;
         game_status status;
@@ -57,7 +57,7 @@ class Snake {
         Point shift(Point prev, direction dir);
         
     public:
-        Snake(int width=30, int height=30, int startLength = 3, int growthRate = 1);
+        Snake(int rows=30, int cols=30, int startScore = 3, int growthRate = 1);
         
         // game logic
         

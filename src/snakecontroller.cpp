@@ -1,19 +1,28 @@
 #include "snakecontroller.hpp"
+#include "cmath"
 
-Snakecontroller::Snakecontroller() {    }
-
-Snakecontroller::Snakecontroller(int width, int height) {
-    gameBoard = Snake(width, height);
+Snakecontroller::Snakecontroller(int rows, int cols, int startScore, int growthRate) {
+    gameBoard = Snake(rows, cols, startScore, growthRate);
     paused = false;
-    this->width = width;
-    this->height = height;
+}
+
+void Snakecontroller::newGame() {
+    gameBoard.newGame();
 }
 
 void Snakecontroller::draw() {
-    for (int x = 0; x < width; x++) {
-        for (int y = 0; y < height; y++) {
+    int width = GetScreenWidth();
+    int height = GetScreenHeight();
+    
+    int screen = (width < height) ? width : height;
+    int side = (rows() > cols()) ? rows() : cols();
+    
+    float scale = ((float) screen) / side;
+    
+    for (int r = 0; r < rows(); r++) {
+        for (int c = 0; c < cols(); c++) {
             Color color = MAGENTA;
-            grid_value cell = gameBoard.getCell(x, y);
+            grid_value cell = gameBoard.getCell(r, c);
             
             if (cell == EMPTY) {
                 color = BLACK;
@@ -23,7 +32,7 @@ void Snakecontroller::draw() {
                 color = RED;
             }
             
-            DrawRectangle(x * 10, y * 10, 10, 10, color);
+            DrawRectangle(round(r * scale), round(c * scale), round(scale), round(scale), color);
         }
     }
 }
