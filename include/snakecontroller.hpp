@@ -8,17 +8,19 @@ class Snakecontroller {
     private:
         Snake gameBoard;
         bool paused;
-        int width;
-        int height;
     public:
-        Snakecontroller();
-        Snakecontroller(int width, int height);
+        Snakecontroller(int rows=30, int cols=30, int startScore = 3, int growthRate = 1);
 
         void draw();
         void update();
+        void newGame();
+        
         void chooseDirection(direction dir);
         game_status getGameStatus() { return gameBoard.getStatus(); }
         void readInput();
+        
+        int rows() { return gameBoard.rows(); }
+        int cols() { return gameBoard.cols(); }
 };
 
 

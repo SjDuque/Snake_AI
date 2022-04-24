@@ -25,7 +25,7 @@ int main(void)
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
 
-    Snakecontroller game = Snakecontroller(30, 30);
+    Snakecontroller game = Snakecontroller(40, 30);
     SetTargetFPS(24);
 
     //---------------------------------------------------------------------------------------
@@ -43,7 +43,7 @@ int main(void)
         }
 
         if (IsKeyPressed(KEY_R))
-            game = Snakecontroller(30, 30);
+            game.newGame();
 
         // Draw
         //----------------------------------------------------------------------------------
