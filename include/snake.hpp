@@ -3,6 +3,7 @@
 
 #include <list>
 #include <vector>
+#include <cstdlib>
 
 enum grid_value {
     EMPTY,
@@ -16,6 +17,13 @@ enum direction {
     DOWN,
     LEFT,
     RIGHT
+};
+
+enum game_status {
+    ACTIVE,
+    COLLIDED,
+    PAUSED,
+    WIN
 };
 
 class Snake {
@@ -34,8 +42,8 @@ class Snake {
         std::list<Point> body;
         std::vector<std::vector<grid_value>> grid;
         direction dir;
-        bool collided;
         int length;
+        game_status status;
 
         void addFront(int x, int y);
         void deleteTail();
@@ -51,7 +59,9 @@ class Snake {
         grid_value getCell(int x, int y);
         void move();
         void setDirection(direction dir) { this->dir = dir; }
-
+        direction getDirection() { return this->dir; }
+        void createFruit();
+        game_status getStatus() { return this->status; }
 };
 
 #endif

@@ -16,6 +16,9 @@ class Snakecontroller {
 
         void draw();
         void update();
+        void chooseDirection(direction dir);
+        game_status getGameStatus() { return gameBoard.getStatus(); }
+        void readInput();
 };
 
 
