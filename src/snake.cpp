@@ -5,6 +5,7 @@ using namespace std;
 Snake::Snake(int width, int height, int startLength, int growthRate) : growthRate(growthRate), startLength(startLength) {
     grid = vector<vector<grid_value>>(width, std::vector<grid_value>(height, EMPTY));
     body = list<Point>();
+    apple = Point{0, 0};
     
     newGame();
 }
@@ -13,6 +14,7 @@ void Snake::clear() {
     while(size() != 0) {
         deleteTail();
     }
+    grid[apple.x][apple.y] = EMPTY;
 }
 
 void Snake::newGame() {
@@ -22,6 +24,7 @@ void Snake::newGame() {
     length = startLength;
     status = ALIVE;
     
+    addFront(rows()/2, cols()/2);
     createFruit();
 }
 
@@ -38,29 +41,31 @@ void Snake::deleteTail() {
 
 bool Snake::move() {
     Point nextHead = shift(getHead(), dir);
-    grid_value destGrid = getCell(nextHead.x, nextHead.y);
+    grid_value nextCell = getCell(nextHead.x, nextHead.y);
     
     // check for collision/death
-    // then check for apple
-    if (destGrid == BODY || destGrid == OUT_OF_BOUNDS) {
+    if (nextCell == BODY || nextCell == OUT_OF_BOUNDS) {
         status = DEAD;
         return false;
-    } else if (destGrid == APPLE) {
+    }
+    
+    // increase length with apples
+    if (nextCell == APPLE) {
         length += growthRate;
     }
     
-    // it's safe to add the head
+    // add head
     addFront(nextHead.x, nextHead.y);
     
-    // remove tail if snake is long enough
-    if (body.size() >= length){
+    // remove tail if long enough
+    if (size() > length){
         deleteTail();
     }
     
-    // check to see if you can add another apple
-    if (length >= grid.size() * grid[0].size()) {
+    // check to see if there's a free space on grid
+    if (size() == rows() * cols()) {
         status = WIN;
-    } else {
+    } else if (nextCell == APPLE) {
         createFruit();
     }
         
@@ -77,11 +82,14 @@ Snake::Point Snake::shift(Point prev, direction dir) {
  */
 void Snake::createFruit() {
     int x, y;
+    
     do {
-        x = rand() % grid.size();
-        y = rand() % grid[0].size();
+        x = rand() % rows();
+        y = rand() % cols();
     } while (getCell(x, y) != EMPTY);
+    
     grid[x][y] = APPLE;
+    apple = Point{x, y};
 }
 
 
@@ -94,8 +102,8 @@ Snake::Point Snake::getTail() {
 }
 
 grid_value Snake::getCell(int x, int y) {
-    if (x < 0 || x >= grid.size() ||
-        y < 0 || y >= grid[0].size())
+    if (x < 0 || x >= rows() ||
+        y < 0 || y >= cols())
         return OUT_OF_BOUNDS;
     return grid[x][y];
 }

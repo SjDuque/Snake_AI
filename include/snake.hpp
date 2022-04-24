@@ -40,6 +40,7 @@ class Snake {
             int x, y;
         };
         
+        Point apple;
         std::list<Point> body;
         std::vector<std::vector<grid_value>> grid;
         
@@ -86,8 +87,8 @@ class Snake {
         direction getDirection() { return this->dir; }
         game_status getStatus() { return this->status; }
         
-        int getWidth() { return grid.size(); }
-        int getHeight() { return grid[0].size(); }
+        int rows() { return grid.size(); }
+        int cols() { return grid[0].size(); }
         int size() { return body.size(); }
         
         // set methods
