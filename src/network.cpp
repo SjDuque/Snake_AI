@@ -31,7 +31,7 @@ Network::Network(Network& base, float mutation_rate) {
 
 // ACTIVATION FUNCTIONS
 
-float Network::relu(float x){
+float Network::relu(float& x){
     return (x > 0) ? x : 0;
 }
 
@@ -45,7 +45,7 @@ MatrixXf Network::relu(MatrixXf& X) {
     return A;
 }
 
-float Network::sigmoid(float x){
+float Network::sigmoid(float& x){
     return 1 / (1 + expf(-x));
 }
 

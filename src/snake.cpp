@@ -1,10 +1,9 @@
+#include <random>
 #include "snake.hpp"
 
-using namespace std;
-
 Snake::Snake(int rows, int cols, int startScore, int growthRate) : growthRate(growthRate), startScore(startScore) {
-    grid = vector<vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
-    body = list<Point>();
+    grid = std::vector<std::vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
+    body = std::list<Point>();
     apple = Point{0, 0};
     
     newGame();
@@ -23,14 +22,15 @@ void Snake::newGame() {
     dir = UP;
     score = startScore;
     status = ALIVE;
+    moves = 0;
     
     addFront(rows()/2, cols()/2);
     createFruit();
 }
 
-void Snake::addFront(int x, int y) {
-    body.push_front(Point{x, y});
-    grid[x][y] = BODY;
+void Snake::addFront(int r, int c) {
+    body.push_front(Point{r, c});
+    grid[r][c] = BODY;
 }
 
 void Snake::deleteTail() {
@@ -54,8 +54,9 @@ bool Snake::move() {
         score += growthRate;
     }
     
-    // add head
+    // move forward
     addFront(nextHead.x, nextHead.y);
+    moves++;
     
     // remove tail if long enough
     if (size() > score){
@@ -68,7 +69,6 @@ bool Snake::move() {
     } else if (nextCell == APPLE) {
         createFruit();
     }
-        
     return true;
 }
 
@@ -90,20 +90,4 @@ void Snake::createFruit() {
     
     grid[x][y] = APPLE;
     apple = Point{x, y};
-}
-
-
-Snake::Point Snake::getHead() {
-    return body.front();
-}
-
-Snake::Point Snake::getTail() {
-    return body.back();
-}
-
-grid_value Snake::getCell(int x, int y) {
-    if (x < 0 || x >= rows() ||
-        y < 0 || y >= cols())
-        return OUT_OF_BOUNDS;
-    return grid[x][y];
 }
