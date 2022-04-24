@@ -1,6 +1,5 @@
 #include <cmath>
 #include "network.hpp"
-#include <iostream>
 
 // CONSTRUCTORS
 
@@ -66,14 +65,15 @@ VectorXf Network::forward(VectorXf& X) {
     const int L = W.size(); // num layers
     
     VectorXf A = X.eval();
+    MatrixXf Z;
     
     for (int l = 0; l < L-1; l++) {
-        MatrixXf Z = W[l] * A;
+        Z = W[l] * A;
         Z.colwise() += b[l];
         A = relu(Z).eval();
     }
     
-    MatrixXf Z = W[L-1] * A;
+    Z = W[L-1] * A;
     Z.colwise() += b[L-1];
     A = sigmoid(Z).eval();
     
@@ -84,14 +84,15 @@ MatrixXf Network::forward(MatrixXf& X) {
     const int L = W.size(); // num layers
     
     MatrixXf A = X.transpose().eval();
+    MatrixXf Z;
     
     for (int l = 0; l < L-1; l++) {
-        MatrixXf Z = W[l] * A;
+        Z = W[l] * A;
         Z.colwise() += b[l];
         A = relu(Z).eval();
     }
     
-    MatrixXf Z = W[L-1] * A;
+    Z = W[L-1] * A;
     Z.colwise() += b[L-1];
     A = sigmoid(Z).eval();
     
