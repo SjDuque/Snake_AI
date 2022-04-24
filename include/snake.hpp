@@ -5,6 +5,9 @@
 #include <vector>
 #include <cstdlib>
 
+const std::vector<int> DIR_MAP_X = {0, 0, -1, 1};
+const std::vector<int> DIR_MAP_Y = {-1, 1, 0, 0};
+
 enum grid_value {
     EMPTY,
     BODY,
@@ -20,8 +23,8 @@ enum direction {
 };
 
 enum game_status {
-    ACTIVE,
-    COLLIDED,
+    ALIVE,
+    DEAD,
     PAUSED,
     WIN
 };
@@ -36,32 +39,59 @@ class Snake {
         struct Point {
             int x, y;
         };
-
-        static const int GROWTH = 1;
-          
+        
         std::list<Point> body;
         std::vector<std::vector<grid_value>> grid;
-        direction dir;
+        
+        int startLength;
+        int growthRate;
         int length;
+        
+        direction dir;
         game_status status;
 
         void addFront(int x, int y);
         void deleteTail();
-        void shift();
-        Point shiftDirection(Point prev, direction dir);
+        void clear();
+        Point shift(Point prev, direction dir);
         
     public:
-        Snake();
-        Snake(int width, int height);
+        Snake(int width=30, int height=30, int startLength = 3, int growthRate = 1);
         
+        // game logic
+        
+        /**
+         * @brief Generates a new fruit at a random empty location.
+         * 
+         */
+        void createFruit();
+        
+        /**
+         * @brief Restart the game instance
+         * 
+         */
+        void newGame();
+        /**
+         * @brief Moves snake forward
+         * 
+         * @return true if no collision
+         * @return false otherwise
+         */
+        bool move();
+        
+        // get methods
         Point getHead();
         Point getTail();
         grid_value getCell(int x, int y);
-        void move();
-        void setDirection(direction dir) { this->dir = dir; }
         direction getDirection() { return this->dir; }
-        void createFruit();
         game_status getStatus() { return this->status; }
+        
+        int getWidth() { return grid.size(); }
+        int getHeight() { return grid[0].size(); }
+        int size() { return body.size(); }
+        
+        // set methods
+        void setDirection(direction dir) { this->dir = dir; }
 };
 
 #endif

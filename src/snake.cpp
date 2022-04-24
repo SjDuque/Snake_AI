@@ -1,28 +1,28 @@
 #include "snake.hpp"
 
 using namespace std;
-    
-Snake::Snake() {    }
 
-Snake::Snake(int width, int height) {
+Snake::Snake(int width, int height, int startLength, int growthRate) : growthRate(growthRate), startLength(startLength) {
     grid = vector<vector<grid_value>>(width, std::vector<grid_value>(height, EMPTY));
     body = list<Point>();
-    int midX = width/2;
-    int midY = height/2;
-    addFront(midX, midY);
+    
+    newGame();
+}
+
+void Snake::clear() {
+    while(size() != 0) {
+        deleteTail();
+    }
+}
+
+void Snake::newGame() {
+    clear();
+    
     dir = UP;
-    length = 3;
-    status = ACTIVE;
-
+    length = startLength;
+    status = ALIVE;
+    
     createFruit();
-}
-
-Snake::Point Snake::getHead() {
-    return body.front();
-}
-
-Snake::Point Snake::getTail() {
-    return body.back();
 }
 
 void Snake::addFront(int x, int y) {
@@ -36,36 +36,61 @@ void Snake::deleteTail() {
     body.pop_back();
 }
 
-/**
- * @brief Moves snake and checks collision. Sets collision flag if collision occurs.
- * 
- * @param dir 
- * @return false if collision occurs.
- */
-void Snake::move() {
-    Point nextHead = shiftDirection(getHead(), dir);
+bool Snake::move() {
+    Point nextHead = shift(getHead(), dir);
     grid_value destGrid = getCell(nextHead.x, nextHead.y);
-    switch (destGrid) {
-        case EMPTY:
-            break;
-        case BODY:
-            if (getTail().x != nextHead.x || getTail().y != nextHead.y)
-                status = COLLIDED;
-            break;
-        case APPLE:
-            length += GROWTH;
-            if (length != grid.size() * grid[0].size())
-                createFruit();
-            break;
-        case OUT_OF_BOUNDS:
-            status = COLLIDED;
-            return;
-        default:
-            break;
+    
+    // check for collision/death
+    // then check for apple
+    if (destGrid == BODY || destGrid == OUT_OF_BOUNDS) {
+        status = DEAD;
+        return false;
+    } else if (destGrid == APPLE) {
+        length += growthRate;
     }
-    shift();
-    if (length == grid.size() * grid[0].size())
+    
+    // it's safe to add the head
+    addFront(nextHead.x, nextHead.y);
+    
+    // remove tail if snake is long enough
+    if (body.size() >= length){
+        deleteTail();
+    }
+    
+    // check to see if you can add another apple
+    if (length >= grid.size() * grid[0].size()) {
         status = WIN;
+    } else {
+        createFruit();
+    }
+        
+    return true;
+}
+
+Snake::Point Snake::shift(Point prev, direction dir) {
+    return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
+}
+
+/**
+ * @brief Generates a new fruit at a random empty location.
+ * 
+ */
+void Snake::createFruit() {
+    int x, y;
+    do {
+        x = rand() % grid.size();
+        y = rand() % grid[0].size();
+    } while (getCell(x, y) != EMPTY);
+    grid[x][y] = APPLE;
+}
+
+
+Snake::Point Snake::getHead() {
+    return body.front();
+}
+
+Snake::Point Snake::getTail() {
+    return body.back();
 }
 
 grid_value Snake::getCell(int x, int y) {
@@ -73,37 +98,4 @@ grid_value Snake::getCell(int x, int y) {
         y < 0 || y >= grid[0].size())
         return OUT_OF_BOUNDS;
     return grid[x][y];
-}
-
-/**
- * @brief Moves the body of the snake, growing if possible.
- * 
- * @param dir 
- */
-void Snake::shift() {
-    Point nextHead = shiftDirection(getHead(), dir);
-    if (body.size() + 1 > length)
-        deleteTail();
-    addFront(nextHead.x, nextHead.y);
-}
-
-Snake::Point Snake::shiftDirection(Point prev, direction dir) {
-    int deltaX[] = {0, 0, -1, 1};
-    int deltaY[] = {-1, 1, 0, 0};
-    return Point{prev.x + deltaX[dir], prev.y + deltaY[dir]};
-}
-
-/**
- * @brief Generates a new fruit on a random empty location.
- * 
- */
-void Snake::createFruit() {
-    while (true) {
-        int x = rand() % grid.size();
-        int y = rand() % grid[0].size();
-        if (getCell(x, y) == EMPTY) {
-            grid[x][y] = APPLE;
-            return;
-        }
-    }
 }

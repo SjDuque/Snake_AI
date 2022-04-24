@@ -10,7 +10,6 @@
 ********************************************************************************************/
 
 #include "raylib.h"
-#include "Eigen/Dense"
 
 #include "snake.hpp"
 #include "snakecontroller.hpp"
@@ -19,16 +18,15 @@ int main(void)
 {
     // Initialization
     //--------------------------------------------------------------------------------------
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    const int screenWidth = 500;
+    const int screenHeight = 500;
     
-    Eigen::MatrixXf a(50, 50);
-    InitWindow(screenWidth, screenHeight, "raylib [textures] example - texture loading and drawing");
+    InitWindow(screenWidth, screenHeight, "Snake");
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    Texture2D texture = LoadTexture("assets/raylib_logo.png");        // Texture loading
 
-    Snakecontroller game = Snakecontroller(50, 30);
+    Snakecontroller game = Snakecontroller(50, 50);
+    SetTargetFPS(10);
 
     //---------------------------------------------------------------------------------------
 
@@ -39,13 +37,13 @@ int main(void)
         //----------------------------------------------------------------------------------
         // TODO: Update your variables here
         //----------------------------------------------------------------------------------
-        if (game.getGameStatus() == ACTIVE) {
+        if (game.getGameStatus() == ALIVE) {
             game.readInput();
             game.update();
         }
 
         if (IsKeyPressed(KEY_R))
-            game = Snakecontroller(50, 30);
+            game = Snakecontroller(50, 50);
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -55,18 +53,12 @@ int main(void)
 
             game.draw();
 
-            if (game.getGameStatus() == COLLIDED) {
+            if (game.getGameStatus() == DEAD) {
                 DrawText("L", GetScreenWidth()/2 - MeasureText("L", 300)/2, GetScreenHeight()/2 - 50, 300, PINK);
             }
 
         EndDrawing();
-        //----------------------------------------------------------------------------------
-        WaitTime(100);
     }
-
-    // De-Initialization
-    //--------------------------------------------------------------------------------------
-    UnloadTexture(texture);       // Texture unloading
 
     CloseWindow();                // Close window and OpenGL context
     //--------------------------------------------------------------------------------------
