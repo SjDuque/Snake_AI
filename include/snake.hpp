@@ -87,7 +87,7 @@ class Snake {
         game_status getStatus() { return this->status; }
         int getMoves() { return moves; }
         bool isValid(int r, int c) { return r > -1 && r < rows() && c > -1 && c < cols(); }
-        grid_value getCell(int r, int c) { return isValid(r, c) ? OUT_OF_BOUNDS : grid[r][c]; }
+        grid_value getCell(int r, int c) { return !isValid(r, c) ? OUT_OF_BOUNDS : grid[r][c]; }
         
         int rows() { return grid.size(); }
         int cols() { return grid[0].size(); }

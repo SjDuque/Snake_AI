@@ -1,7 +1,6 @@
 #include "raylib.h"
 
 #include "snakecontroller.hpp"
-#include "population.hpp"
 
 int main(void)
 {
