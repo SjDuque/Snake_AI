@@ -83,8 +83,7 @@ VectorXf Network::forward(VectorXf& X) {
 MatrixXf Network::forward(MatrixXf& X) {
     const int L = W.size(); // num layers
     
-    MatrixXf A = X.transpose().eval();
-    MatrixXf Z;
+    MatrixXf Z, A = X.transpose().eval();
     
     for (int l = 0; l < L-1; l++) {
         Z = W[l] * A;
