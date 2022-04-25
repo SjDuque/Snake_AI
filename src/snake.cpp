@@ -1,10 +1,10 @@
+#include <random>
 #include "snake.hpp"
 
-using namespace std;
-
+// CONSTRUCTORS AND GAME STARTING
 Snake::Snake(int rows, int cols, int startScore, int growthRate) : growthRate(growthRate), startScore(startScore) {
-    grid = vector<vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
-    body = list<Point>();
+    grid = std::vector<std::vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
+    body = std::list<Point>();
     apple = Point{0, 0};
     
     newGame();
@@ -20,23 +20,30 @@ void Snake::clear() {
 void Snake::newGame() {
     clear();
     
-    dir = UP;
+    dir = NORTH;
     score = startScore;
     status = ALIVE;
+    moves = 0;
     
     addFront(rows()/2, cols()/2);
     createFruit();
 }
 
-void Snake::addFront(int x, int y) {
-    body.push_front(Point{x, y});
-    grid[x][y] = BODY;
+// movement methods
+
+void Snake::addFront(int r, int c) {
+    body.push_front(Point{r, c});
+    grid[r][c] = BODY;
 }
 
 void Snake::deleteTail() {
     Point tail = getTail();
     grid[tail.x][tail.y] = EMPTY;
     body.pop_back();
+}
+
+Point Snake::shift(Point prev, direction dir) {
+    return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
 }
 
 bool Snake::move() {
@@ -54,8 +61,9 @@ bool Snake::move() {
         score += growthRate;
     }
     
-    // add head
+    // move forward
     addFront(nextHead.x, nextHead.y);
+    moves++;
     
     // remove tail if long enough
     if (size() > score){
@@ -68,21 +76,11 @@ bool Snake::move() {
     } else if (nextCell == APPLE) {
         createFruit();
     }
-        
     return true;
 }
 
-Point Snake::shift(Point prev, direction dir) {
-    return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
-}
-
-/**
- * @brief Generates a new fruit at a random empty location.
- * 
- */
 void Snake::createFruit() {
     int x, y;
-    
     do {
         x = rand() % rows();
         y = rand() % cols();
@@ -90,15 +88,6 @@ void Snake::createFruit() {
     
     grid[x][y] = APPLE;
     apple = Point{x, y};
-}
-
-
-Point Snake::getHead() {
-    return body.front();
-}
-
-Point Snake::getTail() {
-    return body.back();
 }
 
 Point Snake::getApple() {
@@ -112,8 +101,16 @@ grid_value Snake::getCell(int x, int y) {
     return grid[x][y];
 }
 
-grid_value getRelativeCell(int relativeX, int relativeY) {
+grid_value Snake::getRelativeCell(int relativeX, int relativeY) {
     if (dir == NORTH) {
 
     }
+}
+// DIRECTION
+void Snake::turnLeft() {
+    dir = (direction)((dir + 3) % 4);
+}
+
+void Snake::turnRight() {
+    dir = (direction)((dir + 1) % 4);
 }

@@ -53,12 +53,12 @@ void Snakecontroller::chooseDirection(direction dir) {
 
 void Snakecontroller::readInput() {
     if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_UP)) {
-        chooseDirection(UP);
+        chooseDirection(NORTH);
     } else if (IsKeyPressed(KEY_DOWN) || IsKeyDown(KEY_DOWN)) {
-        chooseDirection(DOWN);
+        chooseDirection(SOUTH);
     } else if (IsKeyPressed(KEY_LEFT) || IsKeyDown(KEY_LEFT)) {
-        chooseDirection(LEFT);
+        chooseDirection(WEST);
     } else if (IsKeyPressed(KEY_RIGHT) || IsKeyDown(KEY_RIGHT)) {
-        chooseDirection(RIGHT);
+        chooseDirection(EAST);
     }
 }

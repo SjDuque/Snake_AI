@@ -1,8 +1,8 @@
 #ifndef SNAKECONTROLLER_HPP
 #define SNAKECONTROLLER_HPP
 
-#include "snake.hpp"
 #include "raylib.h"
+#include "snake.hpp"
 
 class Snakecontroller {
     private:

@@ -20,6 +20,12 @@ class Network {
     public:
     
     /**
+     * @brief Construct an empty new Network object
+     * 
+     */
+    Network() {}
+    
+    /**
      * @brief Construct a new Network object
      * 
      * @param dims Specify the dimensions of each layer.
@@ -41,10 +47,10 @@ class Network {
     
     // ACTIVATION FUNCTIONS
 
-    float relu(float x);
+    float relu(float& x);
     MatrixXf relu(MatrixXf& X);
     
-    float sigmoid(float x);
+    float sigmoid(float& x);
     MatrixXf sigmoid(MatrixXf& X);
     
     // OPERATIONS
