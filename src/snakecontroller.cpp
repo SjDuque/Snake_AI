@@ -47,8 +47,9 @@ void Snakecontroller::update() {
  * @param dir 
  */
 void Snakecontroller::chooseDirection(direction dir) {
-    if (gameBoard.getDirection() / 2 != dir / 2)
+    if (gameBoard.getDirection() != (dir+2)%4) {
         gameBoard.setDirection(dir);
+    }
 }
 
 void Snakecontroller::readInput() {

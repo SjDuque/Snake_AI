@@ -12,7 +12,6 @@ void Population::runEpoch(Snake& snake, float scoreWeight, unsigned int seed) {
     for (Brain brain : brains) {
         srand(seed);
         snake.newGame();
-        
         //set move
         while(snake.getStatus() == ALIVE) {
             brain.move(snake);
@@ -20,5 +19,18 @@ void Population::runEpoch(Snake& snake, float scoreWeight, unsigned int seed) {
         // set fitness
         brain.calcFitness(snake, scoreWeight);
     }
+}
+
+void Population::naturalSelection() {
+    // float totalFitness = 0;
+    // for (Brain brain : brains) {
+    //     totalFitness += brain.getFitness();
+    // }
+    
+    // float sum = 0;
+    // for (int i = 0; i < brains.size(); i++) {
+    //     sum += brains[i].getFitness();
+    //     int ind = 
+    // }
 }
 

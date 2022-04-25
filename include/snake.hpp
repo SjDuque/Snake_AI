@@ -4,8 +4,8 @@
 #include <list>
 #include <vector>
 
-const std::vector<int> DIR_MAP_X = {0, 0, -1, 1};
-const std::vector<int> DIR_MAP_Y = {-1, 1, 0, 0};
+const std::vector<int> DIR_MAP_X = {0, 1, 0, -1};
+const std::vector<int> DIR_MAP_Y = {-1, 0, 1, 0};
 
 enum grid_value {
     EMPTY,
