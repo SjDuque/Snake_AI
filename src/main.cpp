@@ -11,7 +11,6 @@
 
 #include "raylib.h"
 
-#include "snake.hpp"
 #include "snakecontroller.hpp"
 
 int main(void)

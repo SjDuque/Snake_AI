@@ -29,17 +29,17 @@ enum game_status {
     WIN
 };
 
+/**
+ * @brief stores x and y coords
+ * 
+ */
+struct Point {
+    int x, y;
+};
+
 class Snake {
     
     private:
-        /**
-         * @brief stores x and y coords
-         * 
-         */
-        struct Point {
-            int x, y;
-        };
-        
         Point apple;
         std::list<Point> body;
         std::vector<std::vector<grid_value>> grid;
@@ -83,9 +83,11 @@ class Snake {
         // get methods
         Point getHead();
         Point getTail();
+        Point getApple();
         grid_value getCell(int x, int y);
         direction getDirection() { return this->dir; }
         game_status getStatus() { return this->status; }
+        grid_value getRelativeCell(int relativeX, int relativeY);
         
         int rows() { return grid.size(); }
         int cols() { return grid[0].size(); }

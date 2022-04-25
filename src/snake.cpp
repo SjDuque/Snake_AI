@@ -72,7 +72,7 @@ bool Snake::move() {
     return true;
 }
 
-Snake::Point Snake::shift(Point prev, direction dir) {
+Point Snake::shift(Point prev, direction dir) {
     return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
 }
 
@@ -93,12 +93,16 @@ void Snake::createFruit() {
 }
 
 
-Snake::Point Snake::getHead() {
+Point Snake::getHead() {
     return body.front();
 }
 
-Snake::Point Snake::getTail() {
+Point Snake::getTail() {
     return body.back();
+}
+
+Point Snake::getApple() {
+    return apple;
 }
 
 grid_value Snake::getCell(int x, int y) {
@@ -106,4 +110,10 @@ grid_value Snake::getCell(int x, int y) {
         y < 0 || y >= cols())
         return OUT_OF_BOUNDS;
     return grid[x][y];
+}
+
+grid_value getRelativeCell(int relativeX, int relativeY) {
+    if (dir == NORTH) {
+
+    }
 }
