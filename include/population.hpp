@@ -14,6 +14,7 @@ class Population {
     
     void runEpoch(Snake& snake, float scoreWeight=0.99, unsigned int seed = 0);
     VectorXf getFeatures(Snake& snake);
+    void naturalSelection();
 };
 
 #endif

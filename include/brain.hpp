@@ -14,8 +14,6 @@ class Brain {
     
     public:
     
-    float fitness;
-    
     Brain() {}
     Brain(std::vector<int>& dims) : net(Network(dims)) {}
     Brain(Brain& base, float mutation_rate) : net(Network(base.net, mutation_rate)) {}
@@ -30,6 +28,7 @@ class Brain {
     void calcFitness(Snake& snake, float scoreWeight);
     void move(Snake& snake);
     VectorXf getFeatures(Snake& snake);
+    float getFitness() { return fitness; }
 };
 
 #endif
