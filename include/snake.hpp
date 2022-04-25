@@ -15,10 +15,10 @@ enum grid_value {
 };
 
 enum direction {
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
 };
 
 enum game_status {
@@ -85,16 +85,21 @@ class Snake {
         Point getTail() { return body.back(); }
         direction getDirection() { return this->dir; }
         game_status getStatus() { return this->status; }
+        
         int getMoves() { return moves; }
-        bool isValid(int r, int c) { return r > -1 && r < rows() && c > -1 && c < cols(); }
-        grid_value getCell(int r, int c) { return !isValid(r, c) ? OUT_OF_BOUNDS : grid[r][c]; }
+        int getScore() { return score-startScore; }
         
         int rows() { return grid.size(); }
         int cols() { return grid[0].size(); }
         int size() { return body.size(); }
         
+        bool isValid(int r, int c) { return r > -1 && r < rows() && c > -1 && c < cols(); }
+        grid_value getCell(int r, int c) { return !isValid(r, c) ? OUT_OF_BOUNDS : grid[r][c]; }
+        
         // set methods
         void setDirection(direction dir) { this->dir = dir; }
+        void turnLeft();
+        void turnRight();
 };
 
 #endif

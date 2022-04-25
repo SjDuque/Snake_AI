@@ -1,6 +1,7 @@
 #include <random>
 #include "snake.hpp"
 
+// CONSTRUCTORS AND GAME STARTING
 Snake::Snake(int rows, int cols, int startScore, int growthRate) : growthRate(growthRate), startScore(startScore) {
     grid = std::vector<std::vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
     body = std::list<Point>();
@@ -19,7 +20,7 @@ void Snake::clear() {
 void Snake::newGame() {
     clear();
     
-    dir = UP;
+    dir = NORTH;
     score = startScore;
     status = ALIVE;
     moves = 0;
@@ -27,6 +28,8 @@ void Snake::newGame() {
     addFront(rows()/2, cols()/2);
     createFruit();
 }
+
+// movement methods
 
 void Snake::addFront(int r, int c) {
     body.push_front(Point{r, c});
@@ -37,6 +40,10 @@ void Snake::deleteTail() {
     Point tail = getTail();
     grid[tail.x][tail.y] = EMPTY;
     body.pop_back();
+}
+
+Snake::Point Snake::shift(Point prev, direction dir) {
+    return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
 }
 
 bool Snake::move() {
@@ -72,17 +79,8 @@ bool Snake::move() {
     return true;
 }
 
-Snake::Point Snake::shift(Point prev, direction dir) {
-    return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
-}
-
-/**
- * @brief Generates a new fruit at a random empty location.
- * 
- */
 void Snake::createFruit() {
     int x, y;
-    
     do {
         x = rand() % rows();
         y = rand() % cols();
@@ -90,4 +88,14 @@ void Snake::createFruit() {
     
     grid[x][y] = APPLE;
     apple = Point{x, y};
+}
+
+
+// DIRECTION
+void Snake::turnLeft() {
+    dir = (direction)((dir + 3) % 4);
+}
+
+void Snake::turnRight() {
+    dir = (direction)((dir + 1) % 4);
 }

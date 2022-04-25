@@ -13,3 +13,19 @@ int Brain::predict(VectorXf& features) {
     
     return max_i;
 }
+
+void Brain::calcFitness(Snake& snake, float scoreWeight) {
+    fitness = scoreWeight * snake.getScore() + (1-scoreWeight) * logf(snake.getMoves()+1);
+}
+
+void Brain::move(Snake& snake) {
+    VectorXf features = getFeatures(snake);
+    
+    int dir = predict(features);
+    if (dir == 0) {
+        snake.turnLeft();
+    } else if (dir == 1) {
+        snake.turnRight();
+    }
+    snake.move();
+}
