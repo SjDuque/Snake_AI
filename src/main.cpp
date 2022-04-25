@@ -1,55 +1,57 @@
 #include "raylib.h"
 
-#include "snakecontroller.hpp"
+#include "snake_game.hpp"
+#include "brain.hpp"
+#include "player.hpp"
+#include "feature_extractor.hpp"
 
+#include <iostream>
+
+using namespace std;
 int main(void)
 {
-    // Initialization
-    //--------------------------------------------------------------------------------------
-    const int screenWidth = 500;
-    const int screenHeight = 500;
+    const int screenWidth = 1000;
+    const int screenHeight = 1000;
     
     InitWindow(screenWidth, screenHeight, "Snake");
+    vector<int> dims = {50, 100, 3};
+    Brain b(dims);
+    // Player p;
+    ControllerI* input = &b;
+    Snake snake;
+    SnakeGame game = SnakeGame(input, 32, 32, 3, 5);
+    SetTargetFPS(120);
 
-    // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-
-    Snakecontroller game = Snakecontroller(50, 50);
-    SetTargetFPS(24);
-
-    //---------------------------------------------------------------------------------------
-
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+    while (!WindowShouldClose())
     {
-        // Update
-        //----------------------------------------------------------------------------------
-        // TODO: Update your variables here
-        //----------------------------------------------------------------------------------
-        if (game.getGameStatus() == ALIVE) {
-            game.readInput();
+        if (game.getStatus() == ALIVE) {
             game.update();
         }
 
-        if (IsKeyPressed(KEY_R))
+        if (IsKeyPressed(KEY_R)) {
+            b = Brain(b, 0.1);
+            input = &b;
             game.newGame();
-
-        // Draw
-        //----------------------------------------------------------------------------------
+        }
+        
         BeginDrawing();
 
             ClearBackground(RAYWHITE);
 
             game.draw();
 
-            if (game.getGameStatus() == DEAD) {
-                DrawText("L", GetScreenWidth()/2 - MeasureText("L", 300)/2, GetScreenHeight()/2 - 50, 300, PINK);
+            if (game.getStatus() == DEAD) {
+                DrawText("L", GetScreenWidth()/2 - MeasureText("L", 300)/2, GetScreenHeight()/2 - MeasureText("L", 300)/2, 300, BLUE);
+                b = Brain(b, 0.1);
+                input = &b;
+                game.newGame();
             }
+            // cout << p.getNextMove(snake) << endl;
 
         EndDrawing();
     }
 
-    CloseWindow();                // Close window and OpenGL context
-    //--------------------------------------------------------------------------------------
+    CloseWindow();
 
     return 0;
 }

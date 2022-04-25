@@ -13,8 +13,7 @@ class Population {
     Population(std::vector<int>& dims, int size=1000, float mutationRate=0.01f);
     
     void runEpoch(Snake& snake, float scoreWeight=0.99, unsigned int seed = 0);
-    VectorXf getFeatures(Snake& snake);
-    void naturalSelection();
+    std::vector<Brain> newBrains();
 };
 
 #endif

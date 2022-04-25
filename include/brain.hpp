@@ -1,12 +1,13 @@
 #ifndef BRAIN_HPP
 #define BRAIN_HPP
 
+#include "controller_i.hpp"
 #include "network.hpp"
 #include "snake.hpp"
 
 using namespace Eigen;
 
-class Brain {
+class Brain : public ControllerI {
     private:
     
     Network net;
@@ -26,9 +27,12 @@ class Brain {
      * @param scoreWeight 
      */
     void calcFitness(Snake& snake, float scoreWeight);
-    void move(Snake& snake);
     VectorXf getFeatures(Snake& snake);
     float getFitness() { return fitness; }
+    
+    // inherited controller functions
+    direction getNextMove (Snake& snake);
+    bool hasNextMove() { return true; }
 };
 
 #endif

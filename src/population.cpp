@@ -14,23 +14,34 @@ void Population::runEpoch(Snake& snake, float scoreWeight, unsigned int seed) {
         snake.newGame();
         //set move
         while(snake.getStatus() == ALIVE) {
-            brain.move(snake);
+            snake.setDirection(brain.getNextMove(snake));
         }
         // set fitness
         brain.calcFitness(snake, scoreWeight);
     }
 }
 
-void Population::naturalSelection() {
-    // float totalFitness = 0;
-    // for (Brain brain : brains) {
-    //     totalFitness += brain.getFitness();
-    // }
+std::vector<Brain> Population::newBrains() {
+    float totalFitness = 0;
+    for (Brain brain : brains) {
+        totalFitness += brain.getFitness();
+    }
     
-    // float sum = 0;
-    // for (int i = 0; i < brains.size(); i++) {
-    //     sum += brains[i].getFitness();
-    //     int ind = 
-    // }
+    std::vector<Brain> newBrains;
+    newBrains.reserve(brains.size());
+    
+    for (int i = 0; i < brains.size(); i++) {
+        float runningSum = 0;
+        float fitValue = ((float) rand() / RAND_MAX) * totalFitness;
+        for (Brain brain : brains) {
+            runningSum += brain.getFitness();
+            if (runningSum >= fitValue) {
+                newBrains.push_back(brain);
+                break;
+            }
+        }
+    }
+    
+    return newBrains;
 }
 

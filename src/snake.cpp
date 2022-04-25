@@ -1,6 +1,18 @@
 #include <random>
 #include "snake.hpp"
 
+Point Point::rotate (direction dir) {  
+    if (dir == NORTH) {
+        return Point{x, y};
+    } else if (dir == EAST) {
+        return Point{-y, x};
+    } else if (dir == SOUTH) {
+        return Point{-x, -y};
+    } 
+    // west
+    return Point{y, -x};
+}
+
 // CONSTRUCTORS AND GAME STARTING
 Snake::Snake(int rows, int cols, int startScore, int growthRate) : growthRate(growthRate), startScore(startScore) {
     grid = std::vector<std::vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
@@ -102,9 +114,9 @@ grid_value Snake::getRelativeCell(int relativeX, int relativeY) {
         return getCell(head.x - relativeY, head.y + relativeX);
     } else if (dir == SOUTH) {
         return getCell(head.x - relativeX, head.y - relativeY);
-    } else if (dir == WEST) {
-        return getCell(head.x + relativeY, head.y - relativeX);
-    }
+    } 
+    // west
+    return getCell(head.x + relativeY, head.y - relativeX);
 }
 // DIRECTION
 void Snake::turnLeft() {

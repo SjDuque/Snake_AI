@@ -34,6 +34,8 @@ enum game_status {
  */
 struct Point {
     int x, y;
+    
+    Point rotate(direction dir);
 };
 
 class Snake {
