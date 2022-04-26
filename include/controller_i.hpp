@@ -5,8 +5,10 @@
 
 class ControllerI {
     public:
-    virtual direction getNextMove(Snake& snake) { return NORTH; };
-    virtual bool hasNext() { return false; };
+    virtual direction getNextMove(Snake& snake) = 0;
+    virtual bool hasNextMove() = 0;
+    virtual void update(Snake& snake) = 0;
+    virtual void newGame(Snake& snake) = 0;
 };
 
 #endif

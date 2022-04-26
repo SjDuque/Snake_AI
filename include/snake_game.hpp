@@ -16,9 +16,13 @@ class SnakeGame {
 
     void draw();
     void update();
-    void newGame() { snake.newGame(); }
+    void newGame() { 
+        snake.newGame(); 
+        input->newGame(snake);
+    }
     
     game_status getStatus() { return snake.getStatus(); }
+    int getMoves() { return snake.getMoves(); }
     
     int rows() { return snake.rows(); }
     int cols() { return snake.cols(); }

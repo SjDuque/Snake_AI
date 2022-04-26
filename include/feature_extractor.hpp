@@ -28,11 +28,10 @@ static std::vector<float> extractApplePos(Snake& game) {
     Point apple = game.getApple();
     Point head = game.getHead();
     
-    int distX = apple.x - head.x;
-    int distY = apple.y - head.x;
+    Point dist = {apple.x - head.x, apple.y - head.y};
+    dist.rotate(game.getDirection());
     
-    
-    return std::vector<float>{(float)apple.x, (float)apple.y};
+    return std::vector<float>{(float)dist.x, (float)dist.y};
 }
 
 static std::vector<float> extractVision(Snake& game, const int SIGHT_DIST) {

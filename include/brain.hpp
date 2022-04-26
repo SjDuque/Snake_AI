@@ -33,6 +33,8 @@ class Brain : public ControllerI {
     // inherited controller functions
     direction getNextMove (Snake& snake);
     bool hasNextMove() { return true; }
+    void update(Snake& snake) {}
+    void newGame(Snake& snake) { fitness = 0; }
 };
 
 #endif

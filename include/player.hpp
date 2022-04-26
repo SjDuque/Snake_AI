@@ -27,6 +27,8 @@ class Player : public ControllerI {
         return (direction)oldDir;
     }
     bool hasNextMove() { return true; }
+    void update(Snake& snake) {};
+    void newGame(Snake& snake) {};
 };
 
 #endif

@@ -6,6 +6,7 @@
 SnakeGame::SnakeGame(ControllerI* input, int rows, int cols, int startScore, int growthRate) : input(input) {
     snake = Snake(rows, cols, startScore, growthRate);
     paused = false;
+    newGame();
 }
 
 void SnakeGame::draw() {
@@ -36,6 +37,7 @@ void SnakeGame::draw() {
 }
 
 void SnakeGame::update() {
+    input->update(snake);
     direction nextDir = input->getNextMove(snake);
     snake.setDirection(nextDir);
     snake.move();
