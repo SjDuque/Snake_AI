@@ -1,36 +1,17 @@
 #include <random>
 #include "snake.hpp"
+#include "raylib.h"
 
-Point Point::rotate (direction dir) {  
-    if (dir == NORTH) {
-        return Point{x, y};
-    } else if (dir == EAST) {
-        return Point{-y, x};
-    } else if (dir == SOUTH) {
-        return Point{-x, -y};
-    } 
-    // west
-    return Point{y, -x};
+const bool Snake::alive() {
+    return status==ALIVE || status==PAUSED;
 }
 
-// CONSTRUCTORS AND GAME STARTING
-Snake::Snake(int rows, int cols, int startScore, int growthRate) : growthRate(growthRate), startScore(startScore) {
-    grid = std::vector<std::vector<grid_value>>(rows, std::vector<grid_value>(cols, EMPTY));
-    body = std::list<Point>();
-    apple = Point{0, 0};
-    
-    newGame();
-}
-
-void Snake::clear() {
+void Snake::reset() {
+    // delete the tail and remove the apple
     while(size() != 0) {
         deleteTail();
     }
-    grid[apple.x][apple.y] = EMPTY;
-}
-
-void Snake::newGame() {
-    clear();
+    grid[apple.X][apple.Y] = EMPTY;
     
     dir = NORTH;
     score = startScore;
@@ -38,34 +19,44 @@ void Snake::newGame() {
     moves = 0;
     
     addFront(rows()/2, cols()/2);
-    createFruit();
+    newFruit();
 }
 
-// movement methods
-
-void Snake::addFront(int r, int c) {
-    body.push_front(Point{r, c});
-    grid[r][c] = BODY;
+void Snake::draw() {
+    int width = GetScreenWidth();
+    int height = GetScreenHeight();
+    
+    int screen = (width < height) ? width : height;
+    int side = (rows() > cols()) ? rows() : cols();
+    
+    float scale = ((float) screen) / side;
+    
+    for (int r = 0; r < rows(); r++) {
+        for (int c = 0; c < cols(); c++) {
+            Color color = MAGENTA;
+            GridVal cell = getCell(r, c);
+            
+            if (cell == EMPTY) {
+                color = BLACK;
+            } else if (cell == SNAKE) {
+                color = WHITE;
+            } else if (cell == APPLE) {
+                color = RED;
+            }
+            
+            DrawRectangle(ceil(r * scale), ceil(c * scale), ceil(scale), ceil(scale), color);
+        }
+    }
 }
 
-void Snake::deleteTail() {
-    Point tail = getTail();
-    grid[tail.x][tail.y] = EMPTY;
-    body.pop_back();
-}
-
-Point Snake::shift(Point prev, direction dir) {
-    return Point{prev.x + DIR_MAP_X[dir], prev.y + DIR_MAP_Y[dir]};
-}
-
-bool Snake::move() {
+void Snake::update() {
     Point nextHead = shift(getHead(), dir);
-    grid_value nextCell = getCell(nextHead.x, nextHead.y);
+    GridVal nextCell = getCell(nextHead.x, nextHead.y);
     
     // check for collision/death
-    if (nextCell == BODY || nextCell == OUT_OF_BOUNDS) {
-        status = DEAD;
-        return false;
+    if (nextCell == Snake::SNAKE || nextCell == Snake::DEATH) {
+        status = Snake::LOSE;
+        return;
     }
     
     // increase length with apples
@@ -86,12 +77,58 @@ bool Snake::move() {
     if (size() == rows() * cols()) {
         status = WIN;
     } else if (nextCell == APPLE) {
-        createFruit();
+        newFruit();
     }
-    return true;
 }
 
-void Snake::createFruit() {
+const int Snake::getMoves() {
+    return moves;
+}
+
+const int Snake::getScore() {
+    return (score-startScore)/growthRate;
+}
+
+const int Snake::rows() {
+    return grid.size();
+}
+const int Snake::cols() {
+    return grid[0].size();
+}
+const int Snake::size() {
+    return score;
+}
+
+// CONSTRUCTORS AND GAME STARTING
+Snake::Snake(ControllerI* input, const int& ROWS=30, const int& COLS=30, const int& START_SCORE=3, const int& GROWTH_RATE=1) {
+    startScore = START_SCORE;
+    growthRate = GROWTH_RATE;
+    
+    grid = std::vector<std::vector<GridVal>>(rows, std::vector<GridVal>(cols, EMPTY));
+    body = std::list<Point>();
+    apple = Point{0, 0};
+    
+    reset();
+}
+
+// movement methods
+
+void Snake::addFront(const int& R, const int& C) {
+    body.push_front(Point{R, C});
+    grid[R][C] = Snake::SNAKE;
+}
+
+void Snake::deleteTail() {
+    Point tail = getTail();
+    grid[tail.X][tail.Y] = Snake::EMPTY;
+    body.pop_back();
+}
+
+const Snake::Point Snake::shift(Point& prev, Direction& dir) {
+    return Point{prev.X + DIR_MAP_X[dir], prev.Y + DIR_MAP_Y[dir]};
+}
+
+void Snake::newFruit() {
     int x, y;
     do {
         x = rand() % rows();
@@ -102,13 +139,13 @@ void Snake::createFruit() {
     apple = Point{x, y};
 }
 
-Point Snake::getApple() {
+const Snake::Point Snake::getApple() {
     return apple;
 }
 
-grid_value Snake::getRelativeCell(int relRow, int relCol) {    
+const Snake::GridVal Snake::getRelativeCell(const int& R, const int& C) {  
     Point head = getHead();
-    Point add{relRow, relCol};
+    Point add{R, C};
     add = add.rotate(getDirection());
     
     return getCell(head.x + add.x, head.y + add.y);

@@ -13,8 +13,8 @@ static std::vector<float> extractRelFeatures(Snake& game);
 static std::vector<float> extractAbsFeatures(Snake& game);
 static std::vector<float> extractVision(Snake& game, const int SIGHT_DIST=3);
 
-static int extractFeaturesSize(const int ROWS = 30, const int COLS = 30) {
-    Snake snake(ROWS, COLS);
+static int extractFeaturesSize(ControllerI* input, const int ROWS = 30, const int COLS = 30) {
+    Snake snake(input, ROWS, COLS);
     return extractFeatures(snake).size();
 }
 
@@ -27,12 +27,12 @@ static std::vector<float> extractAbsFeatures(Snake& game){
     std::vector<float> features;
     
     // direction 
-    direction dir = game.getDirection();
-    if (dir == NORTH) {
+    Snake::Direction dir = game.getDirection();
+    if (dir == Snake::NORTH) {
         f = {0, 0.5};
-    } else if (dir == EAST) {
+    } else if (dir == Snake::EAST) {
         f = {0.5, 0};
-    } else if (dir == SOUTH) {
+    } else if (dir == Snake::SOUTH) {
         f = {0, -0.5};
     } else {
         f = {-0.5, 0};
@@ -40,13 +40,13 @@ static std::vector<float> extractAbsFeatures(Snake& game){
     features.insert(features.end(), f.begin(), f.end());
     
     // apple
-    Point p = game.getApple();
-    f = {((float)p.x)/game.rows(), ((float)p.y)/game.cols()};
+    Snake::Point p = game.getApple();
+    f = {((float)p.X)/game.rows(), ((float)p.X)/game.cols()};
     features.insert(features.end(), f.begin(), f.end());
     
     // head
     p = game.getHead();
-    f = {((float)p.x)/game.rows(), ((float)p.y)/game.cols()};
+    f = {((float)p.X)/game.rows(), ((float)p.Y)/game.cols()};
     features.insert(features.end(), f.begin(), f.end());
     
     return features;

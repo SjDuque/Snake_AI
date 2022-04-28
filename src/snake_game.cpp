@@ -6,7 +6,7 @@
 SnakeGame::SnakeGame(ControllerI* input, int rows, int cols, int startScore, int growthRate) : input(input) {
     snake = Snake(rows, cols, startScore, growthRate);
     paused = false;
-    newGame();
+    reset();
 }
 
 void SnakeGame::draw() {

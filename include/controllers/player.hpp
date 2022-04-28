@@ -1,32 +1,34 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "snake.hpp"
+#include "raylib.h"
 #include "controller_i.hpp"
 
-class Player : public ControllerI {
+class SnakePlayer : public ControllerI {
     public:
-    direction getNextMove(Snake& snake) {
+    const int getNextMove(GameI& game) {
+        Snake& snake = (Snake&) game;
         int oldDir = snake.getDirection();
         int newDir = oldDir;
         
         if (IsKeyPressed(KEY_UP) || IsKeyDown(KEY_UP)) {
-            newDir = NORTH;
+            newDir = Snake::NORTH;
         } else if (IsKeyPressed(KEY_RIGHT) || IsKeyDown(KEY_RIGHT)) {
-            newDir = EAST;
+            newDir = Snake::EAST;
         } else if (IsKeyPressed(KEY_DOWN) || IsKeyDown(KEY_DOWN)) {
-            newDir = SOUTH;
+            newDir = Snake::SOUTH;
         } else if (IsKeyPressed(KEY_LEFT) || IsKeyDown(KEY_LEFT)) {
-            newDir = WEST;
+            newDir = Snake::WEST;
         }
         
         // check to see if snake would turn into itself
         if (oldDir != (newDir+2)%4) {
-            return (direction)newDir;
+            return newDir;
         }
         
-        return (direction)oldDir;
+        return oldDir;
     }
-    bool hasNextMove() { return true; }
     void update(Snake& snake) {};
     void newGame(Snake& snake) {};
 };

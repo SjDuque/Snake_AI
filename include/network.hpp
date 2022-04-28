@@ -11,19 +11,13 @@ using namespace Eigen;
  * 
  */
 class Network {
-    
-    private:
-    
-    std::vector<MatrixXf> W; // weight matrices
-    std::vector<VectorXf> b; // bias vectors
-    
     public:
     
     /**
      * @brief Construct an empty new Network object
      * 
      */
-    Network() {}
+    Network();
     
     /**
      * @brief Construct a new Network object
@@ -43,15 +37,15 @@ class Network {
      * @param mutation_rate Determines magnitude of mutation, 
      * similar to learning rate. Use values between 0 and 1.
      */
-    Network(Network& base, float mutationRate);
-    void mutate(float mutationRate);
+    Network(Network& base, const float& MUTATION_RATE);
+    void mutate(const float& MUTATION_RATE);
     
     // ACTIVATION FUNCTIONS
 
-    float relu(float& x);
+    float relu(const float& X);
     MatrixXf relu(MatrixXf& X);
     
-    float sigmoid(float& x);
+    float sigmoid(const float& X);
     MatrixXf sigmoid(MatrixXf& X);
     
     // OPERATIONS
@@ -71,6 +65,11 @@ class Network {
      * @return Shape: (NUM_EXAMPLES, NUM_OUTPUTS)
      */
     MatrixXf forward(MatrixXf& X);
+    
+    private:
+    
+    std::vector<MatrixXf> W; // weight matrices
+    std::vector<VectorXf> b; // bias vectors
 };
 
 #endif

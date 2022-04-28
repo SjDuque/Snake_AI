@@ -41,22 +41,31 @@ endif()
 #-------------------------
 # Include any headers and c files to add to the executable
 #-------------------------
-include_directories(
-	${PROJECT_SOURCE_DIR}/include
-	${PROJECT_SOURCE_DIR}/src
-)
-
 file(GLOB main_sources
-	"${PROJECT_SOURCE_DIR}/include/*.h"
-	"${PROJECT_SOURCE_DIR}/include/*.hpp"
+    "${PROJECT_SOURCE_DIR}/include/*.h"
+    "${PROJECT_SOURCE_DIR}/include/*.hpp"
+    "${PROJECT_SOURCE_DIR}/include/controllers/*.h"
+    "${PROJECT_SOURCE_DIR}/include/controllers/*.hpp"
+    "${PROJECT_SOURCE_DIR}/include/games/*.h"
+    "${PROJECT_SOURCE_DIR}/include/games/*.hpp"
+    "${PROJECT_SOURCE_DIR}/include/interfaces/*.h"
+    "${PROJECT_SOURCE_DIR}/include/interfaces/*.hpp"
 	"${PROJECT_SOURCE_DIR}/src/*.c"
 	"${PROJECT_SOURCE_DIR}/src/*.cpp"
 )
 
 add_executable(${PROJECT_NAME} ${main_sources})
 
+target_include_directories(${PROJECT_NAME} PRIVATE
+	${PROJECT_SOURCE_DIR}/include
+    ${PROJECT_SOURCE_DIR}/include/controllers
+    ${PROJECT_SOURCE_DIR}/include/games
+    ${PROJECT_SOURCE_DIR}/include/interfaces
+	${PROJECT_SOURCE_DIR}/src
+)
 # If you are using a package manager such as brew or apt-get
 target_link_libraries(${PROJECT_NAME} raylib Eigen3::Eigen)
+
 
 # If you are using VCPKG:
 # target_include_directories(${PROJECT_NAME} PRIVATE ${RAYLIB_INCLUDE_DIRS})
