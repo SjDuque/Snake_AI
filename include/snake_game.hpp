@@ -21,6 +21,7 @@ class SnakeGame {
         input->newGame(snake);
     }
     
+    Snake& getSnake() { return snake; }
     game_status getStatus() { return snake.getStatus(); }
     int getMoves() { return snake.getMoves(); }
     

@@ -1,4 +1,6 @@
 #include <random>
+#include <iostream>
+#include <algorithm>
 #include "population.hpp"
 
 Population::Population(std::vector<int>& dims, int size, float mutationRate) : mutationRate(mutationRate) {
@@ -7,52 +9,41 @@ Population::Population(std::vector<int>& dims, int size, float mutationRate) : m
     }
 }
 
-void Population::runEpoch(Snake& snake, float scoreWeight, const int MAX_MOVES) {
+void Population::runEpoch(Snake& snake, float scoreWeight, const int MAX_MOVES, const int NUM_GAMES) {
     for (int i = 0; i < brains.size(); i++) {
-        snake.newGame();
-        //set move
-        while(snake.getStatus() == ALIVE && snake.getMoves() < MAX_MOVES) {
-            snake.setDirection(brains[i].getNextMove(snake));
-            snake.move();
+        brains[i].setFitness(0);
+        for (int g = 0; g < NUM_GAMES; g++) {
+            snake.newGame();
+            //set move
+            while(snake.getStatus() == ALIVE && snake.getMoves() < MAX_MOVES) {
+                snake.setDirection(brains[i].getNextMove(snake));
+                snake.move();
+            }
+            // set fitness
+            brains[i].calcFitness(snake, scoreWeight);
         }
-        // set fitness
-        brains[i].calcFitness(snake, scoreWeight);
     }
     snake.newGame();
+    
+    std::sort(brains.begin(), brains.end());
+    std::cout << brains[0].getFitness() << " " << brains[brains.size()-1].getFitness() << std::endl;
 }
 
-std::vector<Brain> Population::newBrains() {
-    float totalFitness = 0;
-    for (int i = 0; i < brains.size(); i++) {
-        totalFitness += brains[i].getFitness();
+void Population::newBrains() {
+    Brain best = brains[brains.size()-1];
+    for (int i = brains.size()/2; i < brains.size(); i++) {
+        brains[i-brains.size()/2] = Brain(brains[i], mutationRate);
+        brains[i] = Brain(brains[i], mutationRate);
     }
-    
-    std::vector<Brain> newBrains;
-    
-    while (newBrains.size() < brains.size()) {
-        float runningSum = 0;
-        float fitValue = ((float) rand() / RAND_MAX) * totalFitness;
-        
-        for (int j = 0; j < brains.size(); j++) {
-            runningSum += brains[j].getFitness();
-            if (runningSum >= fitValue) {
-                newBrains.push_back(Brain(brains[j], 0));
-                newBrains.push_back(Brain(brains[j], mutationRate));
-                break;
-            }
-        }
-    }
-    
-    return newBrains;
+    brains[brains.size()-1] = best;
 }
 
 direction Population::getNextMove (Snake& snake) {
-    return brains[0].getNextMove(snake);
-    // return best.getNextMove(snake);
+    return brains[brains.size()-1].getNextMove(snake);
 }
 
 void Population::newGame(Snake& snake) {
-    runEpoch(snake, 0.99f, 100);
+    runEpoch(snake);
     
     int maxFit_i = 0;
     
@@ -61,7 +52,5 @@ void Population::newGame(Snake& snake) {
             maxFit_i = i;
         }
     }
-    
-    best = brains[maxFit_i];
-    brains = newBrains();
+    newBrains();
 }

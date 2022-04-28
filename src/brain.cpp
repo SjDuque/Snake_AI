@@ -15,7 +15,7 @@ int Brain::predict(VectorXf& features) {
 }
 
 void Brain::calcFitness(Snake& snake, float scoreWeight) {
-    fitness = scoreWeight * snake.getScore() + (1-scoreWeight) * logf(snake.getMoves()+1);
+    fitness += scoreWeight * snake.getScore() + (1-scoreWeight) * logf(snake.getMoves());
 }
 
 VectorXf Brain::getFeatures(Snake& snake) {

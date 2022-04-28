@@ -16,8 +16,8 @@ int main(void)
     const int MAX_MOVES = 100;
     
     InitWindow(screenWidth, screenHeight, "Snake");
-    vector<int> dims = {50, 75, 100, 75, 50, 20, 10, 3};
-    Population pop(dims, 5000, 0.3);
+    vector<int> dims = {extractFeaturesSize(), 10, 10, 5, 3};
+    Population pop(dims, 2500, 0.1);
     Brain brain(dims);
     Player play;
     ControllerI* input = &pop;

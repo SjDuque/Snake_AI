@@ -6,15 +6,14 @@
 class Population : public ControllerI {
     private:
     std::vector<Brain> brains;
-    Brain best;
     float mutationRate;
     
     public:
     Population() {}
     Population(std::vector<int>& dims, int size=1000, float mutationRate=0.1f);
     
-    void runEpoch(Snake& snake, float scoreWeight=0.99, const int MAX_MOVES = 100);
-    std::vector<Brain> newBrains();
+    void runEpoch(Snake& snake, float scoreWeight=0.99, const int MAX_MOVES=200, const int NUM_GAMES=3);
+    void newBrains();
     
     // ControllerI
     

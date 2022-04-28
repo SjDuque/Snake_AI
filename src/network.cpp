@@ -12,20 +12,27 @@ Network::Network(std::vector<int>& dims) {
     }
 }
 
-Network::Network(Network& base, float mutation_rate) {
+Network::Network(Network& base, float mutationRate) {
     for (int i = 0; i < base.W.size(); i++) {
         // grab the base values
-        MatrixXf W_i = base.W[i].eval();
-        MatrixXf b_i = base.b[i].eval();
-        
+        W.push_back(base.W[i]);
+        b.push_back(base.b[i]);
+    }
+    mutate(mutationRate);
+}
+
+void Network::mutate(float mutationRate) {
+    for (int i = 0; i < W.size(); i++) {
         // find the mutation weights
-        const float HE =  (mutation_rate / sqrtf(W_i.rows()/2.0f));
-        MatrixXf randW_i = MatrixXf::Random(W_i.rows(), W_i.cols()) * HE;
-        MatrixXf randb_i = VectorXf::Random(b_i.rows()) * HE;
+        const float HE =  (mutationRate / sqrtf(W[i].rows()/2.0f));
+        MatrixXf randW_i = MatrixXf::Random(W[i].rows(), W[i].cols()) * HE;
+        MatrixXf randb_i = VectorXf::Random(W[i].rows()) * HE;
         
-        //
-        W.push_back(W_i+randW_i);
-        b.push_back(b_i+randb_i);
+        randW_i += W[i];
+        randb_i += b[i];
+        
+        W[i] = randW_i;
+        b[i] = randb_i;
     }
 }
 

@@ -43,7 +43,8 @@ class Network {
      * @param mutation_rate Determines magnitude of mutation, 
      * similar to learning rate. Use values between 0 and 1.
      */
-    Network(Network& base, float mutation_rate);
+    Network(Network& base, float mutationRate);
+    void mutate(float mutationRate);
     
     // ACTIVATION FUNCTIONS
 

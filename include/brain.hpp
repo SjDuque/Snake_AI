@@ -6,7 +6,7 @@
 #include "snake.hpp"
 
 using namespace Eigen;
-
+    
 class Brain : public ControllerI {
     private:
     
@@ -16,8 +16,10 @@ class Brain : public ControllerI {
     public:
     
     Brain() {}
-    Brain(std::vector<int>& dims) : net(Network(dims)) {}
-    Brain(Brain& base, float mutation_rate) : net(Network(base.net, mutation_rate)) {}
+    Brain(std::vector<int>& dims) : net(Network(dims)), fitness(0) {}
+    Brain(Brain& base, float mutationRate) : net(Network(base.net, mutationRate)), fitness(0) {}
+    
+    void mutate(float mutationRate) { net.mutate(mutationRate); };
     
     int predict(VectorXf& features);
     /**
@@ -27,8 +29,14 @@ class Brain : public ControllerI {
      * @param scoreWeight 
      */
     void calcFitness(Snake& snake, float scoreWeight);
+    
     VectorXf getFeatures(Snake& snake);
     float getFitness() { return fitness; }
+    void setFitness(float fitness) { this->fitness = fitness; }
+    
+    friend bool operator<(const Brain& a, const Brain& b) {
+        return a.fitness < b.fitness;
+    }
     
     // inherited controller functions
     direction getNextMove (Snake& snake);

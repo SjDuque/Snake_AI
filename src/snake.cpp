@@ -106,17 +106,12 @@ Point Snake::getApple() {
     return apple;
 }
 
-grid_value Snake::getRelativeCell(int relativeX, int relativeY) {    
+grid_value Snake::getRelativeCell(int relRow, int relCol) {    
     Point head = getHead();
-    if (dir == NORTH) {
-        return getCell(head.x + relativeX, head.y + relativeY);
-    } else if (dir == EAST) {
-        return getCell(head.x - relativeY, head.y + relativeX);
-    } else if (dir == SOUTH) {
-        return getCell(head.x - relativeX, head.y - relativeY);
-    } 
-    // west
-    return getCell(head.x + relativeY, head.y - relativeX);
+    Point add{relRow, relCol};
+    add = add.rotate(getDirection());
+    
+    return getCell(head.x + add.x, head.y + add.y);
 }
 // DIRECTION
 void Snake::turnLeft() {

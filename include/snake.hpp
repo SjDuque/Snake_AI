@@ -91,7 +91,7 @@ class Snake {
         grid_value getRelativeCell(int relativeX, int relativeY);
         
         int getMoves() { return moves; }
-        int getScore() { return score-startScore; }
+        int getScore() { return (score-startScore)/growthRate; }
         
         int rows() { return grid.size(); }
         int cols() { return grid[0].size(); }
